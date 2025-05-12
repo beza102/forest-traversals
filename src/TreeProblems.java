@@ -1,5 +1,9 @@
+import static org.junit.jupiter.api.Assumptions.abort;
+
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class TreeProblems {
 
@@ -28,6 +32,20 @@ public class TreeProblems {
    If the root is null, do nothing.
    */
   public static <T> void postOrder(Node<T> root) {
+    if(root == null) return;
+
+    if(root.children != null){
+      
+      for(Node<T> child: root.children){
+        postOrder(child);
+
+      }
+      System.out.println(root.value);
+
+    }
+      
+    
+
   }
 
   /*
@@ -55,6 +73,16 @@ public class TreeProblems {
    5
    */
   public static <T> void postOrder(Map<T, List<T>> tree, T root) {
+    if(tree == null || !tree.containsKey(root)) return;
+    List<T> children = tree.get(root);
+    if(children != null){
+      for(T child : children){
+        postOrder(tree, child);
+      }
+      System.out.println(root);
+    }
+
+    
   }
 
   /*
@@ -72,7 +100,13 @@ public class TreeProblems {
    A null tree should return 0
   */
   public static int sumTree(Node<Integer> root) {
-    return -1;
+    if(root == null) return 0;
+    int sum= root.value;
+    for(Node<Integer> child : root.children){
+      sum +=sumTree(child);
+    }
+    
+    return sum;
   }
 
   /*
@@ -95,7 +129,23 @@ public class TreeProblems {
    Hint: There's a simple way to do this!
   */
   public static int sumTree(Map<Integer, List<Integer>> tree) {
-    return -1;
+    if(tree == null) return 0;
+    Set<Integer> allNode = new HashSet<>();
+
+    //add the key
+    allNode.addAll(tree.keySet());
+
+    //add the value
+    for(List<Integer> children: tree.values()){
+      allNode.addAll(children);
+    }
+
+    //add unique values
+    int sum = 0;
+    for(int val : allNode){
+      sum +=val;
+    }
+    return sum;
   }
 
   /*
@@ -118,6 +168,17 @@ public class TreeProblems {
    Hint: No recursion needed! Think about how you would do this by hand.
   */
   public static <T> T findRoot(Map<T, List<T>> tree) {
+    Set<T> allChild = new HashSet<>();
+
+    //get all child
+    for(List<T> children : tree.values()){
+      allChild.addAll(children);
+    }
+    for(T parent : tree.keySet()){
+      if(!allChild.contains(parent)){
+        return parent;
+      }
+    }
     return null;
   }
 
@@ -140,7 +201,15 @@ public class TreeProblems {
    
   */
   public static <T> int maxDepth(Node<T> root) {
-    return -1;
+    if(root == null) return 0;
+    if(root.children.isEmpty())return 1;
+
+    int max =0;
+
+    for(Node<T> child : root.children){
+      max = Math.max(max, maxDepth(child));
+    }
+    return max +1;
   }
 
   /*
